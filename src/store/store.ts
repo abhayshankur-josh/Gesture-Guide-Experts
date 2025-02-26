@@ -1,19 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { loginApi } from '../features/Login/api';
-import loginReducer from '../features/Login/slice';
+import { rootReducer } from '../reducers/rootReducer';
 import { signupApi } from '../features/Signup/api';
-import signupReducer from '../features/Signup/slice'
+import { submissionsApi } from '../features/Approval/api';
 
 export const store = configureStore({
-    reducer: {
-        login: loginReducer,
-        [loginApi.reducerPath]: loginApi.reducer,
-        signup: signupReducer,
-        [signupApi.reducerPath]: signupApi.reducer,
-    },
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(loginApi.middleware),
+        getDefaultMiddleware().concat([
+            loginApi.middleware,
+            signupApi.middleware,
+            submissionsApi.middleware
+        ]),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export type AppRootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

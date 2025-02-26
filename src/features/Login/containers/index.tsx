@@ -1,22 +1,23 @@
-import { useState } from "react";
 import { useLoginMutation } from "../api";
 import { setToken } from "../slice";
 import { clearToken } from "../../Login/slice";
 import { useDispatch } from "react-redux";
+import LoginComponent, { MyLoginFormValues } from "../components/LoginComponent";
 
 export default function LoginContainer() {
-  const [email, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
 
-  const handleSignup = async () => {
+  const handleLogin = async (values: MyLoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     try {
-      const { token } = await login({ email, password }).unwrap();
+      const { token } = await login(values).unwrap();
       dispatch(setToken(token));
       console.log('Login successful, token stored:', token);
     } catch (error) {
       console.error('Login failed:', error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -29,27 +30,12 @@ export default function LoginContainer() {
     }
   };
 
+
   return (
-    <div>
-      <h1>Login</h1>
-      <input
-        type="text"
-        value={email}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button onClick={handleSignup} disabled={isLoading}>
-        Login
-      </button>
-      <button onClick={handleLogout} disabled={isLoading}>
-        Logout
-      </button>
-    </div>
+    <LoginComponent
+      handleLogin={handleLogin}
+      handleLogout={handleLogout}
+      isLoading={isLoading}
+    />
   );
 }

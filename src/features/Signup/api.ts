@@ -15,7 +15,7 @@ interface SignupResponse {
 
 export const signupApi = createApi({
   reducerPath: 'signupApi',
-  baseQuery: fetchBaseQuery({ baseUrl: API_ROUTES.BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_ROUTES.BASE_URL+API_ROUTES.VERSIONS.V1 }),
   endpoints: (builder) => ({
     signup: builder.mutation<SignupResponse, SignupRequest>({
       query: (body) => ({

@@ -12,7 +12,7 @@ interface LoginResponse {
 
 export const loginApi = createApi({
   reducerPath: 'loginApi',
-  baseQuery: fetchBaseQuery({ baseUrl: API_ROUTES.BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_ROUTES.BASE_URL+API_ROUTES.VERSIONS.V1 }),
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => ({

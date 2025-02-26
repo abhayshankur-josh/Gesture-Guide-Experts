@@ -4,31 +4,32 @@ export const ROUTES = {
     HOME: '/',
     LOGIN: '/login',
     SIGNUP: '/signup',
-    FORGOT_PASSWORD: '/forgot-password',
+    // FORGOT_PASSWORD: '/forgot-password',
     
     // Protected routes
     DASHBOARD: '/dashboard',
-    PROFILE: '/profile',
-    SETTINGS: '/settings',
+    SUBMISSIONS: '/submissions'
+    // PROFILE: '/profile',
+    // SETTINGS: '/settings',
     
     // Feature-specific routes
-    PRODUCTS: {
-      LIST: '/products',
-      DETAILS: (id: string) => `/products/${id}`,
-      CREATE: '/products/create',
-      EDIT: (id: string) => `/products/${id}/edit`,
-    },
+    // PRODUCTS: {
+    //   LIST: '/products',
+    //   DETAILS: (id: string) => `/products/${id}`,
+    //   CREATE: '/products/create',
+    //   EDIT: (id: string) => `/products/${id}/edit`,
+    // },
     
-    ORDERS: {
-      LIST: '/orders',
-      DETAILS: (id: string) => `/orders/${id}`,
-    },
+    // ORDERS: {
+    //   LIST: '/orders',
+    //   DETAILS: (id: string) => `/orders/${id}`,
+    // },
     
-    // Nested routes example
-    ADMIN: {
-      ROOT: '/admin',
-      USERS: '/admin/users',
-      ANALYTICS: '/admin/analytics',
-      SETTINGS: '/admin/settings',
-    }
+    // // Nested routes example
+    // ADMIN: {
+    //   ROOT: '/admin',
+    //   USERS: '/admin/users',
+    //   ANALYTICS: '/admin/analytics',
+    //   SETTINGS: '/admin/settings',
+    // }
   };

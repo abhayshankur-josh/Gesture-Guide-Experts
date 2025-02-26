@@ -17,13 +17,8 @@ const signupSlice = createSlice({
       state.token = action.payload;
       localStorage.setItem('token', action.payload);
     },
-    clearToken: (state) => {
-      state.token = null;
-      localStorage.removeItem('token');
-      console.log(localStorage.getItem('token'))
-    },
   },
 });
 
-export const { setToken, clearToken } = signupSlice.actions;
+export const { setToken } = signupSlice.actions;
 export default signupSlice.reducer;
