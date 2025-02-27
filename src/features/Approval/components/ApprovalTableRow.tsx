@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
-import { Submission, SubmissionView } from '../types/approvalTypes';
 import StatusBadge from './StatusBadge';
+import { Button } from 'react-bootstrap';
+import PreviewVideoComponent from './PreviewVideo';
+import RejectModalComponent from './RejectModalComponent';
 
 interface ApprovalTableRowProps {
-  submission: SubmissionView | undefined;
-  // submissionView?: SubmissionView
+  submission: ISubmissionView | undefined;
   onApprove: (submissionId: string) => Promise<void>;
   onReject: (submissionId: string, reason?: string) => Promise<void>;
 }
 
 const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({ 
   submission, 
-  // submissionView,
   onApprove, 
   onReject 
 }) => {
-  // const [isExpanded, setIsExpanded] = useState(false);
   const [isActioning, setIsActioning] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -57,6 +56,17 @@ const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({
       minute: '2-digit'
     }).format(date);
   };
+
+  
+  const [show, setShow] = useState(false);
+  const [videoPath, setVideoPath] = useState('');
+
+  const handleClose = () => setShow(false);
+  function handleShow(videoPath: string | undefined) {
+    setShow(true);
+    videoPath && setVideoPath(videoPath);
+  }
+
 
   // TODO: Redesign the view
   // return (
@@ -216,19 +226,19 @@ const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({
     <>
     {/* <tr className={submission?.status === 'pending' ? 'table-active' : ''}> */}
     <tr className={'table-active'}>
-      <td>{submission?.id}</td>
-      <td>{submission?.sign_title}</td>
+      <td>{submission?.id || 'ID '}</td>
+      <td>{submission?.sign_title || 'Title'}</td>
       <td>{submission?.sign_id}</td>
       <td>{submission?.publisher_name}</td>
       <td>{formatDate(new Date(submission!.created_at))}</td>
       <td>
-           {/* TODO: Status */}
-        <StatusBadge status={'pending'} />
+        {submission?.sign_status && <StatusBadge status={submission?.sign_status} />}
       </td>
       <td>
-        <a href={submission?.video_path} target="_blank" rel="noopener noreferrer">
+        <Button variant="info" onClick={()=> handleShow(submission?.video_path)} >
           {submission?.video_path ? 'Watch Video' : 'No Video'}
-        </a>
+        </Button>
+        <PreviewVideoComponent show={show} handleClose={handleClose} videoPath={videoPath}/>
       </td>
       <td>
         <div className="btn-group">
@@ -253,62 +263,14 @@ const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({
     </tr>
     {/* Reject Modal */}
     {
-      showRejectModal && (
-      <div className="modal d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Reject Submission</h5>
-              <button 
-                type="button" 
-                className="btn-close" 
-                onClick={() => setShowRejectModal(false)}
-                disabled={isActioning}
-              ></button>
-            </div>
-            <div className="modal-body">
-              <p>Are you sure you want to reject this submission?</p>
-              <div className="mb-3">
-                <label htmlFor="reject-reason" className="form-label">Reason (Optional)</label>
-                <textarea
-                  id="reject-reason"
-                  className="form-control"
-                  rows={3}
-                  value={rejectReason}
-                  onChange={(e) => setRejectReason(e.target.value)}
-                  placeholder="Provide a reason for rejection..."
-                ></textarea>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button 
-                type="button" 
-                className="btn btn-secondary"
-                onClick={() => setShowRejectModal(false)}
-                disabled={isActioning}
-              >
-                Cancel
-              </button>
-              <button 
-                type="button" 
-                className="btn btn-danger"
-                onClick={handleReject}
-                disabled={isActioning}
-              >
-                {isActioning ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Processing...
-                  </>
-                ) : (
-                  <>Confirm Rejection</>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
+      showRejectModal && 
+        <RejectModalComponent 
+          isActioning={isActioning} 
+          setShowRejectModal={setShowRejectModal} 
+          rejectReason={rejectReason} 
+          setRejectReason={setRejectReason} 
+          handleReject={handleReject} 
+        />}
     </>
   );
   

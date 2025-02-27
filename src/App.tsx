@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { configRoutes, RouteComponents } from './root/routes'
 import ProtectedRoute from './root/protectedRoute'
-import { ROUTES } from './constants/routesConstants'
 
 function App() {
 // TODO: Create Protected routes

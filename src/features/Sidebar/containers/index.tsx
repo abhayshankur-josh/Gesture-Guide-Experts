@@ -1,7 +1,13 @@
+import { useDispatch, useSelector } from "react-redux";
 import { ROUTES } from "../../../constants/routesConstants";
+import { AppRootState } from "../../../store/store";
+import { useLogoutMutation } from "../../Auth/api";
+// import { useGetProfileQuery } from "../../Profile/api";
 import SidebarComponent from "../components/SidebarComponent";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export interface MenuItemProps {
+export interface IMenuItemProps {
   id: string;
   title: string;
   icon: string;
@@ -11,32 +17,50 @@ export interface MenuItemProps {
 
 const SidebarContainer: React.FC = () => {
   
-  const menuItems: Array<MenuItemProps> = [
+  // const { data, isLoading } = useGetProfileQuery();
+
+  const menuItemsInitialState: Array<IMenuItemProps> = [
     { id: 'dashboard', title: 'Dashboard', icon: 'bi-speedometer2', path: ROUTES.DASHBOARD, isCurrent: true },
     { id: 'submissions', title: 'Submissions', icon: 'bi-file-earmark-text', path: ROUTES.SUBMISSIONS, isCurrent: false },
-    // { id: 'approvals', title: 'Approvals', icon: 'bi-check-circle', path: '/approvals', active: false },
-    // { id: 'reports', title: 'Reports', icon: 'bi-bar-chart', path: '/reports', active: false },
-    // { id: 'settings', title: 'Settings', icon: 'bi-gear', path: '/settings', active: false }
   ];
 
-  const handleLogout = () => {
-    alert('Logout functionality would trigger here');
-    // In a real app: authService.logout();
+  const [menuItems, setMenuItems] = useState(menuItemsInitialState);
+  const navigate = useNavigate();
+  
+  const handleLogout = async () => {
+    try {
+      const [ logout ] = useLogoutMutation();
+      await logout().unwrap();
+      alert("You have logged out successfully!");
+    } catch (error) {
+      alert("Logged out failed!");
+      console.log(error);
+    }
   };
 
   const handleMenuItemClick = (itemId: string) => {
     alert(`Navigating to ${itemId}`);
+    setMenuItems(prevItems => prevItems.map(
+      item => ({
+        ...item,
+        isCurrent: item.id === itemId
+      })
+    ));
+    // navigate(`/${itemId}`);
     // In a real app, you would use React Router: navigate(`/${itemId}`);
   };
+
+  const username = useSelector((state: AppRootState) => state.profileSlice.full_name);
 
   return (
     <SidebarComponent 
       menuItems={menuItems} 
       onMenuItemClick={handleMenuItemClick} 
-      username="John Doe" 
+      username={username} 
       onLogout={handleLogout} 
     />
   );
 };
 
 export default SidebarContainer;
+

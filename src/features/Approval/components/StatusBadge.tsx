@@ -1,8 +1,7 @@
 import React from 'react';
-import { SubmissionStatus } from '../types/approvalTypes';
 
 interface StatusBadgeProps {
-  status: SubmissionStatus;
+  status: TSubmissionStatus;
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
@@ -28,7 +27,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   }
   
   return (
-    <span className={`badge ${badgeClass} d-flex align-items-center`}>
+    <span className={`badge ${badgeClass} d-flex justify-content-center`}>
       <i className={`bi ${iconClass} me-1`}></i>
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>

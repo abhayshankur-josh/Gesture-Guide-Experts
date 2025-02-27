@@ -5,7 +5,7 @@ import { ROUTES } from "../constants/routesConstants";
 
 const ProtectedRoute: React.FC<RouteProps> = ({element}) => {
     const location = useLocation();
-    const localToken = useSelector((state: AppRootState) => state.login.token || state.signup.token)
+    const localToken = useSelector((state: AppRootState) => state.authSlice.token)
 
     if (!localToken) {
         return <Navigate to={ROUTES.LOGIN}  state={{ from: location}} replace />

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { FilterOptions, SubmissionStatus } from '../types/approvalTypes';
 
 interface ApprovalFiltersProps {
   publishers: string[];
-  onFilterChange: (filters: FilterOptions) => void;
+  onFilterChange: (filters: IFilterOptions) => void;
 }
 
 const ApprovalFilters: React.FC<ApprovalFiltersProps> = ({ publishers, onFilterChange }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [filters, setFilters] = useState<FilterOptions>({
+  const [filters, setFilters] = useState<IFilterOptions>({
     status: 'all',
     publisher: null,
     dateRange: {
@@ -17,7 +16,7 @@ const ApprovalFilters: React.FC<ApprovalFiltersProps> = ({ publishers, onFilterC
     }
   });
 
-  const handleStatusChange = (status: SubmissionStatus | 'all') => {
+  const handleStatusChange = (status: TSubmissionStatus | 'all') => {
     const updatedFilters = { ...filters, status };
     setFilters(updatedFilters);
     onFilterChange(updatedFilters);
@@ -44,7 +43,7 @@ const ApprovalFilters: React.FC<ApprovalFiltersProps> = ({ publishers, onFilterC
   };
 
   const clearFilters = () => {
-    const resetFilters: FilterOptions = {
+    const resetFilters: IFilterOptions = {
       status: 'all',
       publisher: null,
       dateRange: {
@@ -57,7 +56,7 @@ const ApprovalFilters: React.FC<ApprovalFiltersProps> = ({ publishers, onFilterC
   };
 
   return (
-    <div className="card mb-3 border-light bg-light">
+    <div className="card mb-3 flex-grow-1 border-light bg-light">
       <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
         <h5 className="mb-0">
           <i className="bi bi-funnel me-2"></i>

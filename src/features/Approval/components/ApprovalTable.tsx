@@ -1,9 +1,8 @@
 import React from 'react';
-import { Submission, SubmissionView } from '../types/approvalTypes';
 import ApprovalTableRow from './ApprovalTableRow';
 
 interface ApprovalTableProps {
-  submissions: SubmissionView[] | undefined;
+  submissions: ISubmissionView[] | undefined;
   loading: boolean;
   onApprove: (submissionId: string) => Promise<void>;
   onReject: (submissionId: string, reason?: string) => Promise<void>;

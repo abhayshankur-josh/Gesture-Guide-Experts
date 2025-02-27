@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { FilterOptions } from '../types/approvalTypes';
 // import { fetchSubmissions, searchSubmissions, updateSubmissionStatus } from '../services/approvalService';
 import SidebarContainer from '../../Sidebar/containers';
 import ApprovalComponent from '../components/ApprovalComponent';
-import { useSubmissionsQuery, useSubmissionsViewQuery } from '../api';
+import { useActionSubmissionMutation, useSubmissionsQuery, useSubmissionsViewForQuery, useSubmissionsViewQuery } from '../api';
+import { IResponse } from '../../../constants/apiDataTypes';
 
 const ApprovalContainer: React.FC = () => {
   // const [submissions, setSubmissions] = useState<Submission[]>([]);
   // const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<FilterOptions>({
+  const [filters, setFilters] = useState<IFilterOptions>({
     status: 'all',
     publisher: null,
     dateRange: {
@@ -23,7 +23,6 @@ const ApprovalContainer: React.FC = () => {
   // Fetch submissions based on filters or search term
   
   const { data, isLoading } = useSubmissionsViewQuery();
-  // const [ submissions, { isLoading }] = useSubmissionsQuery();
   
   // const loadSubmissions = useCallback(async () => {
   //   setLoading(true);
@@ -60,7 +59,7 @@ const ApprovalContainer: React.FC = () => {
   // }, [loadSubmissions]);
 
   // Handle filter changes
-  const handleFilterChange = (newFilters: FilterOptions) => {
+  const handleFilterChange = (newFilters: IFilterOptions) => {
     setSearchTerm(''); // Clear search when applying filters
     setFilters(newFilters);
   };
@@ -70,18 +69,25 @@ const ApprovalContainer: React.FC = () => {
     setSearchTerm(term);
   };
 
+  // Action to handle approval and rejection.
+  const [ action ] = useActionSubmissionMutation();
+  const handleAction = async (submissionId: string, submissionStatus: TSubmissionStatus) => {
+    if (data && !isLoading) {
+      const record = data.find(submission => submission.id.toString() === submissionId);
+      const requestBody: IActionSubmissionRequest = {
+        submissionId: submissionId,
+        approverId: '12',
+        signId: record!.sign_id.toString(),
+        signStatus: submissionStatus
+      }
+      const response: IResponse = await action(requestBody).unwrap()
+      alert(response.message ? response.message : response.error);
+    }
+  }
   // Handle approval
   const handleApprove = async (submissionId: string) => {
     try {
-      // await updateSubmissionStatus(submissionId, 'approved');
-      // Update local state
-      // setSubmissions(prev => 
-      //   prev.map(sub => 
-      //     sub.submissionId === submissionId 
-      //       ? { ...sub, status: 'approved' } 
-      //       : sub
-      //   )
-      // );
+      await handleAction(submissionId, 'approved');
     } catch (err) {
       setError('Failed to approve submission. Please try again.');
       console.error(err);
@@ -91,15 +97,7 @@ const ApprovalContainer: React.FC = () => {
   // Handle rejection
   const handleReject = async (submissionId: string, reason?: string) => {
     try {
-      // await updateSubmissionStatus(submissionId, 'rejected', reason);
-      // Update local state
-      // setSubmissions(prev => 
-      //   prev.map(sub => 
-      //     sub.submissionId === submissionId 
-      //       ? { ...sub, status: 'rejected', rejectionReason: reason } 
-      //       : sub
-      //   )
-      // );
+      await handleAction(submissionId, 'rejected');
     } catch (err) {
       setError('Failed to reject submission. Please try again.');
       console.error(err);

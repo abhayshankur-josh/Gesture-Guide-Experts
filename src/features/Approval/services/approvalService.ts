@@ -1,48 +1,48 @@
-import { useSubmissionsQuery } from '../api';
-import { Submission, FilterOptions, SubmissionStatus } from '../types/approvalTypes';
+// import { useSubmissionsQuery } from '../api';
+// import { Submission, FilterOptions, SubmissionStatus } from '../Approval';
 
-const API_URL = '/api/submissions'; // Replace with your actual API endpoint
+// const API_URL = '/api/submissions'; // Replace with your actual API endpoint
 
-export const fetchSubmissions = async (filters?: FilterOptions): Promise<Submission[]> => {
-  try {
-    // Building query parameters
-    const queryParams = new URLSearchParams();
+// export const fetchSubmissions = async (filters?: FilterOptions): Promise<Submission[]> => {
+//   try {
+//     // Building query parameters
+//     const queryParams = new URLSearchParams();
 
-    if (filters) {
-      if (filters.status && filters.status !== 'all') {
-        queryParams.append('status', filters.status);
-      }
+//     if (filters) {
+//       if (filters.status && filters.status !== 'all') {
+//         queryParams.append('status', filters.status);
+//       }
       
-      if (filters.publisher) {
-        queryParams.append('publisher', filters.publisher);
-      }
+//       if (filters.publisher) {
+//         queryParams.append('publisher', filters.publisher);
+//       }
       
-      if (filters.dateRange.start) {
-        queryParams.append('startDate', filters.dateRange.start.toISOString());
-      }
+//       if (filters.dateRange.start) {
+//         queryParams.append('startDate', filters.dateRange.start.toISOString());
+//       }
       
-      if (filters.dateRange.end) {
-        queryParams.append('endDate', filters.dateRange.end.toISOString());
-      }
-    }
+//       if (filters.dateRange.end) {
+//         queryParams.append('endDate', filters.dateRange.end.toISOString());
+//       }
+//     }
     
-    const url = `${API_URL}?${queryParams.toString()}`;
-    const response = await fetch(url);
+//     const url = `${API_URL}?${queryParams.toString()}`;
+//     const response = await fetch(url);
     
-    if (!response.ok) {
-      throw new Error(`Failed to fetch submissions: ${response.statusText}`);
-    }
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch submissions: ${response.statusText}`);
+//     }
     
-    const data = await response.json();
-    return data.map((item: any) => ({
-      ...item,
-      createdAt: new Date(item.createdAt)
-    }));
-  } catch (error) {
-    console.error('Error fetching submissions:', error);
-    throw error;
-  }
-};
+//     const data = await response.json();
+//     return data.map((item: any) => ({
+//       ...item,
+//       createdAt: new Date(item.createdAt)
+//     }));
+//   } catch (error) {
+//     console.error('Error fetching submissions:', error);
+//     throw error;
+//   }
+// };
 
 // export const searchSubmissions = async (searchTerm: string): Promise<Submission[]> => {
 //   try {

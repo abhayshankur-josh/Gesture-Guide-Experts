@@ -1,5 +1,3 @@
-
-import { FilterOptions, Submission, SubmissionView } from '../types/approvalTypes';
 import ApprovalFilters from './ApprovalFilters';
 import ApprovalSearch from './ApprovalSearch';
 import ApprovalTable from './ApprovalTable';
@@ -8,11 +6,11 @@ interface ApprovalComponentProps {
     errorMessage: string | null;
     clearError: () => void;
     publishers: string[];
-    handleFilterChange: (newFilters: FilterOptions) => void;
+    handleFilterChange: (newFilters: IFilterOptions) => void;
     handleSearch: (term: string) => void;
     refreshData: () => void;
     loading: boolean;
-    submissions: SubmissionView[] | undefined;
+    submissions: ISubmissionView[] | undefined;
     handleApprove: (submissionId: string) => Promise<void>;
     handleReject: (submissionId: string, reason?: string) => Promise<void>;
 }

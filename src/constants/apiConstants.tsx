@@ -11,6 +11,7 @@ export const API_ROUTES = {
       LOGIN: '/auth/login',
       SIGNUP: '/auth/signup',
       LOGOUT: '/auth/logout',
+      PROFILE: '/auth/profile',
       // REFRESH_TOKEN: '/auth/refresh-token',
       // FORGOT_PASSWORD: '/auth/forgot-password',
       // RESET_PASSWORD: '/auth/reset-password',
@@ -19,27 +20,28 @@ export const API_ROUTES = {
     // // User endpoints
     // USERS: {
     //   ME: '/users/me',
-    //   PROFILE: '/users/profile',
+    //   PROFILE: 'auth/profile',
     //   UPDATE_PROFILE: '/users/profile',
     // },
     
     // Resource endpoints with parameter functions
     SUBMISSIONS: {
       LIST: '/submissions',
-      VIEW: '/submissions-view'
-      // DETAILS: (id: string) => `/products/${id}`,
+      VIEW: '/submissions/view',
+      UPDATE_ACTION: '/submissions/status',
+      VIEW_DETAILS: (id: string) => `/submissions/view/${id}`,
       // CREATE: '/products',
       // UPDATE: (id: string) => `/products/${id}`,
       // DELETE: (id: string) => `/products/${id}`,
     },
     
-    // // ORDERS: {
-    //   LIST: '/orders',
-    //   DETAILS: (id: string) => `/orders/${id}`,
-    //   CREATE: '/orders',
-    //   UPDATE: (id: string) => `/orders/${id}`,
-    //   CANCEL: (id: string) => `/orders/${id}/cancel`,
-    // },
+    SIGNS: {
+      LIST: '/signs',
+      // DETAILS: (id: string) => `/orders/${id}`,
+      // CREATE: '/orders',
+      // UPDATE_STATUS: '/signs/status',
+      // CANCEL: (id: string) => `/orders/${id}/cancel`,
+    },
     
     // // Nested endpoints example
     // ADMIN: {

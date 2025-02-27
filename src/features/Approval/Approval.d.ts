@@ -1,17 +1,6 @@
-export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
+type TSubmissionStatus = 'pending' | 'approved' | 'rejected';
 
-// export interface Submission {
-//   submissionId: string;
-//   signTitle: string;
-//   signDescription: string;
-//   videoPath: string;
-//   signId: string;
-//   publisher: string;
-//   status: SubmissionStatus;
-//   createdAt: Date;
-// }
-
-export interface Submission {
+interface ISubmission {
   id: number;
   sign_id: number;
   submitted_by_id: number;
@@ -20,7 +9,7 @@ export interface Submission {
   updated_at: string;
 }
 
-export interface SubmissionView {
+interface ISubmissionView {
   id: number;
   created_at: string;
   updated_at: string;
@@ -30,13 +19,14 @@ export interface SubmissionView {
   publisher_name: string;
   sign_id: number;
   sign_title: string;
+  sign_status: TSubmissionStatus;
   video_id: number;
   video_path: string;
 }
 
 
-export interface FilterOptions {
-  status: SubmissionStatus | 'all';
+interface IFilterOptions {
+  status: TSubmissionStatus | 'all';
   publisher: string | null;
   dateRange: {
     start: Date | null;
@@ -44,7 +34,14 @@ export interface FilterOptions {
   };
 }
 
-export interface ApprovalAction {
+interface IApprovalAction {
   approve: (submissionId: string) => Promise<void>;
   reject: (submissionId: string, reason?: string) => Promise<void>;
+}
+
+interface IActionSubmissionRequest {
+  submissionId: string;
+  approverId: string;
+  signId: string;
+  signStatus: TSubmissionStatus;
 }

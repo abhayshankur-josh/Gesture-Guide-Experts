@@ -1,8 +1,7 @@
 import { useDispatch } from "react-redux";
-import { useSignupMutation } from "../api";
 import SignupComponent, { MySignupFormValues } from "../components/SIgnupComponent";
-import { setToken } from "../slice";
-import { clearToken } from "../../Login/slice";
+import { useSignupMutation } from "../../api";
+import { clearAuthToken, setAuthToken } from "../../slice";
 
 export default function SignupContainer() {
     const [signup, { isLoading }] = useSignupMutation();
@@ -11,7 +10,7 @@ export default function SignupContainer() {
     const handleSignup = async (values: MySignupFormValues, { setSubmitting } : { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
             const { token } = await signup(values).unwrap();
-            dispatch(setToken(token));
+            dispatch(setAuthToken(token));
             console.log('Login successful, token stored:', token);
         } catch (error) {
             console.error('Login failed:', error);
@@ -22,7 +21,7 @@ export default function SignupContainer() {
 
     const handleSignout = () => {
         try {
-            dispatch(clearToken());
+            dispatch(clearAuthToken());
             console.log('Signout Successful, token cleared!');
         } catch (error) {
             console.error('Signout failed:', error);

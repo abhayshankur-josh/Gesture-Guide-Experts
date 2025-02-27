@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Submission, SubmissionView } from "./types/approvalTypes";
 
 interface SubmissionsState {
-    submissions: Submission[] | null;
-    submissionView: SubmissionView[] | null;
+    submissions: ISubmission[] | null;
+    submissionView: ISubmissionView[] | null;
 }
 
 const initialState: SubmissionsState = {
@@ -16,10 +15,10 @@ const submissionSlice = createSlice({
     name: 'submissionSlice',
     initialState,
     reducers: {
-        setSubmissions: (state, action: PayloadAction<Submission[]>) => {
+        setSubmissions: (state, action: PayloadAction<ISubmission[]>) => {
             state.submissions = action.payload;
         },
-        setSubmissionView: (state, action: PayloadAction<SubmissionView[]>) => {
+        setSubmissionView: (state, action: PayloadAction<ISubmissionView[]>) => {
             state.submissionView = action.payload;
         },
     }

@@ -1,8 +1,8 @@
 import { ROUTES } from "../constants/routesConstants";
 import ApprovalContainer from "../features/Approval/containers";
 import DashboardContainer from "../features/Dashboard/containers";
-import LoginContainer from "../features/Login/containers";
-import SignupContainer from "../features/Signup/containers";
+import LoginContainer from "../features/Auth/Login/containers";
+import SignupContainer from "../features/Auth/Signup/containers";
 
 export interface RouteComponents {
     path: string;
