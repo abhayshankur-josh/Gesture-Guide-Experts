@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../reducers/rootReducer';
 import { submissionsApi } from '../features/Approval/api';
-import { authApi } from '../features/Auth/api';
+import { authApi, logoutApi } from '../features/Auth/api';
 import { profileApi } from '../features/Profile/api';
 
 export const store = configureStore({
@@ -9,6 +9,7 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat([
             authApi.middleware,
+            logoutApi.middleware,
             profileApi.middleware,
             submissionsApi.middleware,
         ]),

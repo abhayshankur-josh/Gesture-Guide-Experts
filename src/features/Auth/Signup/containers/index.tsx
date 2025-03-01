@@ -1,37 +1,41 @@
-import { useDispatch } from "react-redux";
 import SignupComponent, { MySignupFormValues } from "../components/SIgnupComponent";
 import { useSignupMutation } from "../../api";
-import { clearAuthToken, setAuthToken } from "../../slice";
+import { useAppDispatch } from "../../../../store/storeHooks";
+import { useNavigate } from "react-router-dom";
+import { profileApi } from "../../../Profile/api";
+import { setProfileDetails } from "../../../Profile/slice";
+import { ROUTES } from "../../../../constants/routesConstants";
+import { setAuthToken } from "../../slice";
 
 export default function SignupContainer() {
     const [signup, { isLoading }] = useSignupMutation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const handleSignup = async (values: MySignupFormValues, { setSubmitting } : { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
-            const { token } = await signup(values).unwrap();
-            dispatch(setAuthToken(token));
-            console.log('Login successful, token stored:', token);
+            // Setting generated token into local Storage.
+            const { token, error, message } = await signup(values).unwrap();
+            if (token) {
+                dispatch(setAuthToken(token)) ;
+                // Triggering the Get Profile Details endpoint.
+                const profile = await dispatch(profileApi.endpoints.getProfile.initiate()).unwrap();
+                // Storing the Profile details into local Storage.
+                dispatch(setProfileDetails(profile));
+                navigate(ROUTES.DASHBOARD);
+            } else {
+                console.log(`Message: ${message}, Error: ${error}`);
+            }
         } catch (error) {
-            console.error('Login failed:', error);
+            console.error('Signup failed:', error);
         } finally {
             setSubmitting(false);
-        }
-    };
-
-    const handleSignout = () => {
-        try {
-            dispatch(clearAuthToken());
-            console.log('Signout Successful, token cleared!');
-        } catch (error) {
-            console.error('Signout failed:', error);
         }
     };
 
     return(
         <SignupComponent 
             handleSignup={handleSignup}
-            handleSignout={handleSignout}
             isLoading={isLoading}
         />
     );

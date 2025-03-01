@@ -1,25 +1,10 @@
 
 import React from 'react';
 
-interface DashboardStats {
-  submissions: number;
-  signs: number;
-  pendingApprovals: number;
-  completedTasks: number;
-}
 
-interface DashboardComponentProps {
-  stats: DashboardStats;
-  isLoading: boolean;
-  onRefresh: () => void;
-  onCreateNew: () => void;
-}
-
-const DashboardComponent: React.FC<DashboardComponentProps> = ({
+const DashboardComponent: React.FC<IDashboardComponentProps> = ({
   stats,
-  isLoading,
-  onRefresh,
-  onCreateNew
+  isLoading
 }) => {
   return (
     <div className="container-fluid p-4">
@@ -184,23 +169,7 @@ const DashboardComponent: React.FC<DashboardComponentProps> = ({
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Floating Action Button */}
-      <button 
-        className="btn btn-primary rounded-circle position-fixed"
-        style={{ 
-          bottom: "2rem", 
-          right: "2rem", 
-          width: "60px", 
-          height: "60px", 
-          fontSize: "24px",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
-        }}
-        onClick={onCreateNew}
-      >
-        <i className="bi bi-plus"></i>
-      </button>
+      </div>   
     </div>
   );
 };

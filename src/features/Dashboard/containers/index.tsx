@@ -2,6 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import DashboardComponent from '../components/DashboardComponent';
 import SidebarContainer from '../../Sidebar/containers';
+import { FormikHelpers } from 'formik';
+import { Fab } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SubmissionModal from '../components/SubmissionModal';
+import { useCreateSubmissionMutation } from '../../Approval/api';
+import { AppRootState } from '../../../store/store';
+import { useAppSelector } from '../../../store/storeHooks';
 
 interface DashboardStats {
   submissions: number;
@@ -11,6 +18,70 @@ interface DashboardStats {
 }
 
 const DashboardContainer: React.FC = () => {
+  // SubmissionModal logic start -->
+  const profile = useAppSelector((state: AppRootState) => state.profileSlice);
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const handleOpenModal = (): void => {
+    setOpen(true);
+  };
+
+  const handleCloseModal = (): void => {
+    setOpen(false);
+  };
+
+  const [ createSubmission ] = useCreateSubmissionMutation();
+
+  const handleSubmitModal = async (
+    values: IFormValues, 
+    { resetForm }: FormikHelpers<IFormValues>
+  ): Promise<void> => {
+    setSubmitting(true);
+    
+    // TODO: Unable to send file to rails server.
+    try {
+      // const req = {
+      //   publisherEmail: profile.email,
+      //   videoTitle: values.title,
+      //   videoDescription: values.description,
+      //   thumbnailFile: values.videoThumbnail,
+      //   videoFile: values.videoFile,
+      // };
+      // console.log(req)
+
+
+      const formData = new FormData();
+      formData.append('publisherEmail', profile.email);
+      formData.append('videoTitle', values.title);
+      formData.append('videoDescription', values.description);
+      if (values.videoThumbnail) {
+        console.log("in th")
+        formData.append('thumbnailFile', values.videoThumbnail, values.videoThumbnail.name);
+      }
+      if (values.videoFile) {
+        console.log("in fi")
+
+        formData.append('videoFile', values.videoFile, values.videoFile.name);
+      }
+      console.log(formData)
+
+      await createSubmission(formData).unwrap();
+      
+      // Reset form and close modal
+      resetForm();
+      setOpen(false);
+      
+      // You could show a success message here
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // You could show an error message here
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // DashboardComponent logic start -->
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [stats, setStats] = useState<DashboardStats>({
     submissions: 0,
@@ -71,9 +142,22 @@ const DashboardContainer: React.FC = () => {
         <DashboardComponent
           stats={stats}
           isLoading={isLoading}
-          onRefresh={handleRefresh}
-          onCreateNew={handleCreateNew}
+          // onRefresh={handleRefresh}
+          // onCreateNew={handleCreateNew}
         />
+        <Fab
+          color="primary"
+          aria-label="upload"
+          sx={{ position: 'fixed', bottom: 20, right: 20 }}
+          onClick={handleOpenModal}
+        >
+          <AddIcon />
+        </Fab>
+        <SubmissionModal 
+          isOpen={isOpen}
+          submitting={submitting}
+          handleClose={handleCloseModal} 
+          handleSubmit={handleSubmitModal} />
       </div>
     </div>
   );

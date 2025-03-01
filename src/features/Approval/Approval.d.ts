@@ -40,8 +40,9 @@ interface IApprovalAction {
 }
 
 interface IActionSubmissionRequest {
-  submissionId: string;
-  approverId: string;
-  signId: string;
+  submissionId: number;
+  approverId: number;
+  signId: number;
   signStatus: TSubmissionStatus;
+  rejectionReason? :string;
 }

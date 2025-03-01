@@ -1,3 +1,5 @@
+import { useAppDispatch } from "../../../store/storeHooks";
+import { clearAuthToken } from "../../Auth/slice";
 import { IMenuItemProps } from "../containers";
 
 interface SidebarProps {
@@ -7,17 +9,7 @@ interface SidebarProps {
   onMenuItemClick?: (itemId: string) => void;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({ menuItems, username, onLogout }) => {
-  // const dispatch = useDispatch();
-
-  // const handleLogout = () => {
-  //   try {
-  //     dispatch(clearAuthToken());
-  //     console.log('Logout successful, token cleared!');
-  //   } catch (error) {
-  //     console.error('Logout failed:', error);
-  //   }
-  // }
+const SidebarComponent: React.FC<SidebarProps> = ({ menuItems, username, onLogout, onMenuItemClick }) => {
   return (
     <div className="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style={{ width: '280px', height: '100vh' }}>
       <div className="d-flex justify-content-center fs-4 text-white">WELCOME!</div>
@@ -28,10 +20,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({ menuItems, username, onLogou
             <a 
               href={item.path}
               className={`nav-link text-white ${item.isCurrent ? 'active' : ''}`}
-              // onClick={(e) => {
-              //   e.preventDefault();
-              //   onMenuItemClick && onMenuItemClick(item.id);
-              // }}
+              onClick={(e) => {
+                e.preventDefault();
+                onMenuItemClick && onMenuItemClick(item.id);
+              }}
             >
               <i className={`bi ${item.icon} me-2`}></i>
               {item.title}
@@ -50,7 +42,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ menuItems, username, onLogou
           <li><a className="dropdown-item" href="#">Settings</a></li>
           <li><a className="dropdown-item" href="#">Profile</a></li>
           <li><hr className="dropdown-divider" /></li>
-          <li><a className="dropdown-item" onClick={onLogout}>Sign out</a></li>
+          <li><span className="dropdown-item" onClick={onLogout}>Sign out</span></li>
         </ul>
       </div>
     </div>

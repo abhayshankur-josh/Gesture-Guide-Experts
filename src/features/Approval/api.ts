@@ -7,7 +7,8 @@ import { AppRootState } from "../../store/store";
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: API_ROUTES.BASE_URL + API_ROUTES.VERSIONS.V1,
     prepareHeaders: (headers, { getState }) => {
-        const token = (getState() as AppRootState).authSlice.token || localStorage.getItem('token');
+        // const token = (getState() as AppRootState).authSlice.token || localStorage.getItem('token');
+        const token = (getState() as AppRootState).authSlice.token;
         if (token) {
             headers.set('Authorization', `Bearer ${token}`);
         }
@@ -37,8 +38,16 @@ export const submissionsApi = createApi({
                 method: 'POST',
                 body,
             }),
-            invalidatesTags: ['SubmissionsView'],
+            invalidatesTags: ['SubmissionsView','Submissions'],
         }),
+        createSubmission: builder.mutation({
+            query: (body: FormData) => ({
+                url: API_ROUTES.SUBMISSIONS.CREATE,
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['SubmissionsView','Submissions'],
+        })
     }),
 });
 
@@ -47,4 +56,5 @@ export const {
     useSubmissionsViewQuery,
     useSubmissionsViewForQuery,
     useActionSubmissionMutation,
+    useCreateSubmissionMutation,
 } = submissionsApi

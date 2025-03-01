@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ROUTES } from "../../constants/apiConstants";
 import { AppRootState } from "../../store/store";
-import { profileApi } from "../Profile/api";
+import { IRequest, IResponse } from "../../constants/apiDataTypes";
 
 // Function to dynamically add the Authorization header
-const baseQueryWithAuth = fetchBaseQuery({
+const baseQueryWithAuthForLogout = fetchBaseQuery({
     baseUrl: API_ROUTES.BASE_URL + API_ROUTES.VERSIONS.V1,
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as AppRootState).authSlice.token || localStorage.getItem('token');
@@ -15,16 +15,18 @@ const baseQueryWithAuth = fetchBaseQuery({
     },
 });
 
-const getProfileApiTrigger = async (_: any, { dispatch, queryFulfilled }: any) => {
-    try {
-        await queryFulfilled;
-        dispatch(profileApi.util.invalidateTags(['Profile']));
-    } catch (err) {
-        // Handle error if needed
-        alert('Failed to get User.');
-        console.log(err);
-    }
-}
+export const logoutApi = createApi({
+    reducerPath: 'logoutApi',
+    baseQuery: baseQueryWithAuthForLogout,
+    endpoints: (builder) => ({
+        logout: builder.mutation<IResponse, void>({
+            query: () => ({
+                url: API_ROUTES.AUTH.LOGOUT,
+                method: 'DELETE',
+            })
+        })
+    })
+})
 
 export const authApi = createApi({
     reducerPath: 'authApi',
@@ -36,7 +38,6 @@ export const authApi = createApi({
                 method: 'POST',
                 body,
             }),
-            onQueryStarted: getProfileApiTrigger,
         }),
         signup: builder.mutation<IAuthResponse, IAuthSignupRequest>({
             query: (body) => ({
@@ -44,26 +45,13 @@ export const authApi = createApi({
                 method: 'POST',
                 body,
             }),
-            onQueryStarted: getProfileApiTrigger,
-        }),
-        logout: builder.mutation<void, void>({
-            query: () => ({
-                url: API_ROUTES.AUTH.LOGOUT,
-                method: 'DELETE',
-                prepareHeaders: (headers: Headers, { getState }: { getState: () => AppRootState }) => {
-                    const token = (getState() as AppRootState).authSlice.token || localStorage.getItem('token');
-                            if (token) {
-                                headers.set('Authorization', `Bearer ${token}`);
-                            }
-                    return headers
-                },
-            }),
-        }),
-      }),
+        })
+    }),
 });
 
 export const {
     useSignupMutation,
-    useLoginMutation,
-    useLogoutMutation
+    useLoginMutation
 } = authApi;
+
+export const { useLogoutMutation } = logoutApi;

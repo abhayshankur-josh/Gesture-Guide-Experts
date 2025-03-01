@@ -4,8 +4,8 @@ import ApprovalTableRow from './ApprovalTableRow';
 interface ApprovalTableProps {
   submissions: ISubmissionView[] | undefined;
   loading: boolean;
-  onApprove: (submissionId: string) => Promise<void>;
-  onReject: (submissionId: string, reason?: string) => Promise<void>;
+  onApprove: (submissionId: number) => Promise<void>;
+  onReject: (submissionId: number, reason?: string) => Promise<void>;
 }
 
 const ApprovalTable: React.FC<ApprovalTableProps> = ({ 

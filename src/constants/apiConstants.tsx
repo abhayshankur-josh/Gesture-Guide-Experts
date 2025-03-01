@@ -10,7 +10,7 @@ export const API_ROUTES = {
     AUTH: {
       LOGIN: '/auth/login',
       SIGNUP: '/auth/signup',
-      LOGOUT: '/auth/logout',
+      LOGOUT: '/auth/signout',
       PROFILE: '/auth/profile',
       // REFRESH_TOKEN: '/auth/refresh-token',
       // FORGOT_PASSWORD: '/auth/forgot-password',
@@ -30,7 +30,7 @@ export const API_ROUTES = {
       VIEW: '/submissions/view',
       UPDATE_ACTION: '/submissions/status',
       VIEW_DETAILS: (id: string) => `/submissions/view/${id}`,
-      // CREATE: '/products',
+      CREATE: '/submissions',
       // UPDATE: (id: string) => `/products/${id}`,
       // DELETE: (id: string) => `/products/${id}`,
     },

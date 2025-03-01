@@ -13,11 +13,10 @@ interface SignupComponentProps {
     values: MySignupFormValues, 
     formikHelpers: { setSubmitting: (isSubmitting: boolean) => void }
   ) => void;
-  handleSignout: () => void;
   isLoading: boolean;
 }
 
-const SignupComponent: React.FC<SignupComponentProps> = ({handleSignup, handleSignout, isLoading}) => {
+const SignupComponent: React.FC<SignupComponentProps> = ({handleSignup, isLoading}) => {
 
     const initialValues: MySignupFormValues = {
         username: '',
@@ -69,9 +68,6 @@ const SignupComponent: React.FC<SignupComponentProps> = ({handleSignup, handleSi
                     </Form>
                 )}
             </Formik>
-            <hr />
-            <br />
-            <button type="button" onClick={handleSignout} disabled={isLoading}> Log Out </button>
         </div>
     );
 };

@@ -21,8 +21,8 @@ export const profileApi = createApi({
     endpoints: (builder) => ({
         getProfile: builder.query<IProfile, void>({
             query: () => API_ROUTES.AUTH.PROFILE,
-            providesTags: ['Profile'],
-        })
+            providesTags: ['Profile']
+        }),
     }),
 });
 

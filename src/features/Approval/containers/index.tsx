@@ -1,11 +1,15 @@
+
 import React, { useState } from 'react';
-// import { fetchSubmissions, searchSubmissions, updateSubmissionStatus } from '../services/approvalService';
 import SidebarContainer from '../../Sidebar/containers';
 import ApprovalComponent from '../components/ApprovalComponent';
-import { useActionSubmissionMutation, useSubmissionsQuery, useSubmissionsViewForQuery, useSubmissionsViewQuery } from '../api';
+import { useActionSubmissionMutation, useSubmissionsViewQuery } from '../api';
 import { IResponse } from '../../../constants/apiDataTypes';
+import { useGetProfileQuery } from '../../Profile/api';
 
 const ApprovalContainer: React.FC = () => {
+  const { data: profile } = useGetProfileQuery();
+  const { data: submissions, isLoading: isLoadingSubmissions, refetch: refetchSubmissions } = useSubmissionsViewQuery();
+
   // const [submissions, setSubmissions] = useState<Submission[]>([]);
   // const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,9 +25,6 @@ const ApprovalContainer: React.FC = () => {
   const [publishers, setPublishers] = useState<string[]>([]);
 
   // Fetch submissions based on filters or search term
-  
-  const { data, isLoading } = useSubmissionsViewQuery();
-  
   // const loadSubmissions = useCallback(async () => {
   //   setLoading(true);
   //   setError(null);
@@ -71,21 +72,22 @@ const ApprovalContainer: React.FC = () => {
 
   // Action to handle approval and rejection.
   const [ action ] = useActionSubmissionMutation();
-  const handleAction = async (submissionId: string, submissionStatus: TSubmissionStatus) => {
-    if (data && !isLoading) {
-      const record = data.find(submission => submission.id.toString() === submissionId);
+  const handleAction = async (submissionId: number, submissionStatus: TSubmissionStatus, rejectionReason?: string) => {
+    if (submissions && !isLoadingSubmissions) {
+      const record = submissions.find(submission => submission.id === submissionId);
       const requestBody: IActionSubmissionRequest = {
         submissionId: submissionId,
-        approverId: '12',
-        signId: record!.sign_id.toString(),
-        signStatus: submissionStatus
+        approverId: profile!.id,
+        signId: record!.sign_id,
+        signStatus: submissionStatus,
+        rejectionReason: rejectionReason
       }
       const response: IResponse = await action(requestBody).unwrap()
-      alert(response.message ? response.message : response.error);
+      console.log(response.message || response.error)
     }
   }
   // Handle approval
-  const handleApprove = async (submissionId: string) => {
+  const handleApprove = async (submissionId: number) => {
     try {
       await handleAction(submissionId, 'approved');
     } catch (err) {
@@ -95,9 +97,9 @@ const ApprovalContainer: React.FC = () => {
   };
 
   // Handle rejection
-  const handleReject = async (submissionId: string, reason?: string) => {
+  const handleReject = async (submissionId: number, reason?: string) => {
     try {
-      await handleAction(submissionId, 'rejected');
+      await handleAction(submissionId, 'rejected', reason);
     } catch (err) {
       setError('Failed to reject submission. Please try again.');
       console.error(err);
@@ -130,6 +132,7 @@ const ApprovalContainer: React.FC = () => {
   // Refresh data
   const refreshData = () => {
     // loadSubmissions();
+    refetchSubmissions();
   };
 
   return (
@@ -143,8 +146,8 @@ const ApprovalContainer: React.FC = () => {
           handleFilterChange={handleFilterChange}
           handleSearch={handleSearch}
           refreshData={refreshData}
-          loading={isLoading}
-          submissions={data}
+          loading={isLoadingSubmissions}
+          submissions={submissions}
           handleApprove={handleApprove}
           handleReject={handleReject}
         />

@@ -12,6 +12,8 @@ interface IAuthLoginRequest {
 
 interface IAuthResponse {
     token: string;
+    error?: string;
+    message?: string;
 }
  
 interface IAuthState {

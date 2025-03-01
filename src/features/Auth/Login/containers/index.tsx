@@ -1,19 +1,32 @@
 
-import { useDispatch } from "react-redux";
 import LoginComponent, { MyLoginFormValues } from "../components/LoginComponent";
 import { useLoginMutation } from "../../api";
-import { clearAuthToken, setAuthToken } from "../../slice";
+import { profileApi } from "../../../Profile/api";
+import { setProfileDetails } from "../../../Profile/slice";
+import { useAppDispatch } from "../../../../store/storeHooks";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../../constants/routesConstants";
+import { setAuthToken } from "../../slice";
 
 export default function LoginContainer() {
-
   const [login, { isLoading }] = useLoginMutation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async (values: MyLoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     try {
-      const { token } = await login(values).unwrap();
-      dispatch(setAuthToken(token));
-      console.log('Login successful, token stored:', token);
+      // Setting generated token into local Storage.
+      const { token, message, error } = await login(values).unwrap();
+      if (token) {
+        dispatch(setAuthToken(token));
+        // Triggering the Get Profile Details endpoint.
+        const profile = await dispatch(profileApi.endpoints.getProfile.initiate()).unwrap();
+        // Storing the Profile details into local Storage.
+        dispatch(setProfileDetails(profile));
+        navigate(ROUTES.DASHBOARD);
+      } else {
+        console.log(`Message: ${message}, Error: ${error}`);
+      }
     } catch (error) {
       console.error('Login failed:', error);
     } finally {
@@ -21,20 +34,9 @@ export default function LoginContainer() {
     }
   };
 
-  const handleLogout = () => {
-    try {
-      dispatch(clearAuthToken());
-      console.log('Logout successful, token cleared!');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
-
   return (
     <LoginComponent
       handleLogin={handleLogin}
-      handleLogout={handleLogout}
       isLoading={isLoading}
     />
   );

@@ -11,8 +11,8 @@ interface ApprovalComponentProps {
     refreshData: () => void;
     loading: boolean;
     submissions: ISubmissionView[] | undefined;
-    handleApprove: (submissionId: string) => Promise<void>;
-    handleReject: (submissionId: string, reason?: string) => Promise<void>;
+    handleApprove: (submissionId: number) => Promise<void>;
+    handleReject: (submissionId: number, reason?: string) => Promise<void>;
 }
 
 

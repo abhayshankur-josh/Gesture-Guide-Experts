@@ -4,7 +4,6 @@ import { configRoutes, RouteComponents } from './root/routes'
 import ProtectedRoute from './root/protectedRoute'
 
 function App() {
-// TODO: Create Protected routes
   const getRoutes = () => {
     return configRoutes.map((route: RouteComponents) => {
       return(

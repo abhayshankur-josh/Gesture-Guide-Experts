@@ -8,3 +8,7 @@ export interface IResponse {
     message?: string;
     error?: string;
 }
+
+export interface IRequest {
+    body?: any;
+}

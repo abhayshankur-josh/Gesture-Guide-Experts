@@ -11,11 +11,10 @@ interface LoginComponentProps {
     values: MyLoginFormValues, 
     formikHelpers: { setSubmitting: (isSubmitting: boolean) => void }
   ) => void;
-  handleLogout: () => void;
   isLoading: boolean;
 }
 
-const LoginComponent: React.FC<LoginComponentProps> = ({ handleLogin: handleSignup, handleLogout, isLoading }) => {
+const LoginComponent: React.FC<LoginComponentProps> = ({ handleLogin: handleSignup, isLoading }) => {
 
   const initialValues: MyLoginFormValues = {
     email: '',
@@ -52,8 +51,6 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ handleLogin: handleSign
 
       </Formik>
       <hr />
-      <br />
-      <button type="button" onClick={handleLogout} disabled={isLoading}> Log Out </button>
     </div>
   );
 }
