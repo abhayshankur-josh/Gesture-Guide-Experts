@@ -19,6 +19,7 @@ interface ISubmissionView {
   publisher_name: string;
   sign_id: number;
   sign_title: string;
+  sign_description: string;
   sign_status: TSubmissionStatus;
   video_id: number;
   video_path: string;
@@ -45,4 +46,10 @@ interface IActionSubmissionRequest {
   signId: number;
   signStatus: TSubmissionStatus;
   rejectionReason? :string;
+}
+
+interface ApprovalTableRowProps {
+  submission: ISubmissionView | undefined;
+  onApprove: (submissionId: number) => Promise<void>;
+  onReject: (submissionId: number, reason?: string) => Promise<void>;
 }

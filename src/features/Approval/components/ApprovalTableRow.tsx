@@ -4,12 +4,6 @@ import { Button } from 'react-bootstrap';
 import PreviewVideoComponent from './PreviewVideo';
 import RejectModalComponent from './RejectModalComponent';
 
-interface ApprovalTableRowProps {
-  submission: ISubmissionView | undefined;
-  onApprove: (submissionId: number) => Promise<void>;
-  onReject: (submissionId: number, reason?: string) => Promise<void>;
-}
-
 const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({ 
   submission, 
   onApprove, 
@@ -70,10 +64,17 @@ const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({
 
   return (
     <>
-    {/* <tr className={submission?.status === 'pending' ? 'table-active' : ''}> */}
-    <tr className={'table-active'}>
+    <tr className={submission?.sign_status === 'pending' ? 'table-active' : ''}>
+    {/* <tr className={'table-active'}> */}
       <td>{submission?.id || 'ID '}</td>
-      <td>{submission?.sign_title || 'Title'}</td>
+      <td>
+        <div className="d-flex justify-content-between align-items-center">
+          <div>
+            {submission?.sign_title || 'Title'}
+          </div>
+          <i className="bi bi-info-circle" title={submission?.sign_description || ''}></i>
+        </div>
+      </td>
       <td>{submission?.sign_id}</td>
       <td>{submission?.publisher_name}</td>
       <td>{formatDate(new Date(submission!.created_at))}</td>
@@ -84,7 +85,7 @@ const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({
         <Button variant="info" onClick={()=> handleShow(submission?.video_path)} >
           {submission?.video_path ? 'Watch Video' : 'No Video'}
         </Button>
-        <PreviewVideoComponent show={show} handleClose={handleClose} videoPath={videoPath}/>
+        <PreviewVideoComponent show={show} handleClose={handleClose} videoPath={videoPath} description={submission!.sign_description}/>
       </td>
       <td>
         <div className="btn-group">
@@ -106,7 +107,7 @@ const ApprovalTableRow: React.FC<ApprovalTableRowProps> = ({
           </button>
         </div>
       </td>
-    </tr>
+    </tr> 
     {/* Reject Modal */}
     {
       showRejectModal && 

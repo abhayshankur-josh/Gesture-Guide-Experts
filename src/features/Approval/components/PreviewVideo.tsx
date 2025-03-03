@@ -3,12 +3,13 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { API_ROUTES } from '../../../constants/apiConstants';
 
-interface PreviewVideoProps {
+interface IPreviewVideoProps {
     show: boolean;
     handleClose: () => void;
     videoPath: string;
+    description: string
 }
-const PreviewVideoComponent: React.FC<PreviewVideoProps> = ({show, handleClose, videoPath}) => {
+const PreviewVideoComponent: React.FC<IPreviewVideoProps> = ({show, handleClose, videoPath, description}) => {
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -22,6 +23,7 @@ const PreviewVideoComponent: React.FC<PreviewVideoProps> = ({show, handleClose, 
                 controls
                 autoPlay
              />
+            <h4>Description: </h4><p>{description}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={() => window.open(API_ROUTES.BASE_URL+videoPath) } >

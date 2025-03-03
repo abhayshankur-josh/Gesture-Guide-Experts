@@ -31,6 +31,7 @@ export const API_ROUTES = {
       UPDATE_ACTION: '/submissions/status',
       VIEW_DETAILS: (id: string) => `/submissions/view/${id}`,
       CREATE: '/submissions',
+      ACTIVITY: '/submissions/activity',
       // UPDATE: (id: string) => `/products/${id}`,
       // DELETE: (id: string) => `/products/${id}`,
     },

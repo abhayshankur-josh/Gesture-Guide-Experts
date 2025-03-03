@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ROUTES } from "../../constants/apiConstants";
 import { AppRootState } from "../../store/store";
-import { IRequest, IResponse } from "../../constants/apiDataTypes";
+import { IResponse } from "../../constants/apiDataTypes";
 
 // Function to dynamically add the Authorization header
 const baseQueryWithAuthForLogout = fetchBaseQuery({

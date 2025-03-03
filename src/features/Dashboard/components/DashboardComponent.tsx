@@ -1,22 +1,41 @@
 
 import React from 'react';
+import { useAppSelector } from '../../../store/storeHooks';
+import LoadingComponent from './LoadingComponent';
 
 
 const DashboardComponent: React.FC<IDashboardComponentProps> = ({
   stats,
-  isLoading
+  isLoading,
+  recentActivity,
+  isRecentLoading
 }) => {
+  const userId = useAppSelector((state) => state.profileSlice.id);
+
+  function getClassName(status: TSubmissionStatus) {
+    switch (status) {
+      case 'approved': {
+        return 'badge bg-success px-4 py-2';
+      }
+      case 'pending': {
+        return 'badge bg-warning px-4 py-2';
+      }
+      case 'rejected': {
+        return 'badge bg-danger px-4 py-2';
+      }
+      default: {
+        return 'badge bg-info px-4 py-2';
+      }
+    }
+  }
+
   return (
     <div className="container-fluid p-4">
       <div className="row mb-4">
         <div className="col-12">
           <h2 className="mb-4">Dashboard Overview</h2>
           {isLoading ? (
-            <div className="d-flex justify-content-center">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>
+            <LoadingComponent />
           ) : (
             <div className="row g-4">
               {/* Submissions Card */}
@@ -34,7 +53,7 @@ const DashboardComponent: React.FC<IDashboardComponentProps> = ({
                     </div>
                     <div className="mt-3">
                       <span className="badge bg-success">
-                        <i className="bi bi-arrow-up me-1"></i>12% 
+                        <i className="bi bi-arrow-up me-1"></i>12%
                       </span>
                       <span className="text-muted ms-2">Since last month</span>
                     </div>
@@ -57,7 +76,7 @@ const DashboardComponent: React.FC<IDashboardComponentProps> = ({
                     </div>
                     <div className="mt-3">
                       <span className="badge bg-success">
-                        <i className="bi bi-arrow-up me-1"></i>8% 
+                        <i className="bi bi-arrow-up me-1"></i>8%
                       </span>
                       <span className="text-muted ms-2">Since last month</span>
                     </div>
@@ -80,7 +99,7 @@ const DashboardComponent: React.FC<IDashboardComponentProps> = ({
                     </div>
                     <div className="mt-3">
                       <span className="badge bg-danger">
-                        <i className="bi bi-arrow-up me-1"></i>5% 
+                        <i className="bi bi-arrow-up me-1"></i>5%
                       </span>
                       <span className="text-muted ms-2">Since yesterday</span>
                     </div>
@@ -103,7 +122,7 @@ const DashboardComponent: React.FC<IDashboardComponentProps> = ({
                     </div>
                     <div className="mt-3">
                       <span className="badge bg-success">
-                        <i className="bi bi-arrow-up me-1"></i>18% 
+                        <i className="bi bi-arrow-up me-1"></i>18%
                       </span>
                       <span className="text-muted ms-2">Since last week</span>
                     </div>
@@ -116,60 +135,78 @@ const DashboardComponent: React.FC<IDashboardComponentProps> = ({
       </div>
 
       {/* Recent Activity Section */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <div className="card border-0 shadow-sm">
-            <div className="card-header bg-white border-0">
-              <h5 className="mb-0">Recent Activity</h5>
-            </div>
-            <div className="card-body">
-              <div className="table-responsive">
-                <table className="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Type</th>
-                      <th>Description</th>
-                      <th>Status</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>#12345</td>
-                      <td>Submission</td>
-                      <td>Q1 Financial Report</td>
-                      <td><span className="badge bg-success">Approved</span></td>
-                      <td>Today, 10:30 AM</td>
-                    </tr>
-                    <tr>
-                      <td>#12344</td>
-                      <td>Document</td>
-                      <td>Partnership Agreement</td>
-                      <td><span className="badge bg-warning">Pending</span></td>
-                      <td>Today, 9:15 AM</td>
-                    </tr>
-                    <tr>
-                      <td>#12343</td>
-                      <td>Contract</td>
-                      <td>Vendor Contract Renewal</td>
-                      <td><span className="badge bg-info">Signed</span></td>
-                      <td>Yesterday, 3:45 PM</td>
-                    </tr>
-                    <tr>
-                      <td>#12342</td>
-                      <td>Request</td>
-                      <td>Budget Increase Request</td>
-                      <td><span className="badge bg-danger">Rejected</span></td>
-                      <td>Yesterday, 1:30 PM</td>
-                    </tr>
-                  </tbody>
-                </table>
+      {isRecentLoading ? (
+        <LoadingComponent />
+      ) : (
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="card border-0 shadow-sm">
+              <div className="card-header bg-white border-0">
+                <h5 className="mb-0">Recent Activity</h5>
+              </div>
+              <div className="card-body">
+                <div className="table-responsive">
+                  <table className="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Submission ID</th>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentActivity.map(
+                        (activity: ISubmissionView | ISubmission) => {
+                          // Convert updated_at to a Date object
+                          const updatedAt = new Date(activity.updated_at);
+
+                          // Format the date into a readable format (e.g., "March 3, 2025")
+                          const formattedDate = updatedAt.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                          });
+
+                          if ('approver_name' in activity) {
+                            // Handle the ISubmissionView type
+                            return (
+                              <tr key={activity.id}>
+                                <td>{activity.id}</td>
+                                <td>{activity.approver_id === userId ? 'Approved' : 'Created'}</td>
+                                <td>{activity.sign_title}</td>
+                                <td><span className={getClassName(activity.sign_status)}>{activity.sign_status.toUpperCase()}</span></td>
+                                <td>{formattedDate}</td>
+                              </tr>
+                            );
+                          } else {
+                            // Handle the ISubmission type
+                            return (
+                              <tr key={activity.id}>
+                                <td>{activity.id}</td>
+                                <td>{activity.approved_by_id === userId ? 'Approved' : ''}</td>
+                                <td>Partnership Agreement</td>
+                                <td><span className={getClassName('pending')}>{activity.sign_id}</span></td>
+                                <td>{formattedDate}</td>
+                              </tr>
+                            );
+                          }
+                        }
+                      )}
+
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>   
+      )}
+
     </div>
   );
 };

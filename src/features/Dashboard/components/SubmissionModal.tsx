@@ -19,6 +19,7 @@ import VideoFileIcon from '@mui/icons-material/VideoFile';
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
 import FileInput from './FileInput';
+// import FileInput from './FileField';
 
 // Initial values
 const initialValues: IFormValues = {
@@ -104,7 +105,7 @@ const SubmissionModal: React.FC<ISubmissionModalProps> = ({isOpen, submitting, h
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ setFieldValue, isValid, dirty }) => (
+          {({ isValid, dirty }) => (
             <Form>
               <DialogContent>
                 <DialogContentText sx={{ mb: 3 }}>

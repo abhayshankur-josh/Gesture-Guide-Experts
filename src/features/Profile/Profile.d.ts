@@ -8,3 +8,11 @@ interface IProfile {
     created_at: string;
     updated_at: string;
 }
+
+
+// Props for the ProfileModal component
+interface IProfileModalProps {
+    show: boolean;
+    onHide: () => void;
+  }
+  

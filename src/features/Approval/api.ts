@@ -1,25 +1,12 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { API_ROUTES } from "../../constants/apiConstants";
 import { IResponse } from "../../constants/apiDataTypes";
-import { AppRootState } from "../../store/store";
-
-// Function to dynamically add the Authorization header
-const baseQueryWithAuth = fetchBaseQuery({
-    baseUrl: API_ROUTES.BASE_URL + API_ROUTES.VERSIONS.V1,
-    prepareHeaders: (headers, { getState }) => {
-        // const token = (getState() as AppRootState).authSlice.token || localStorage.getItem('token');
-        const token = (getState() as AppRootState).authSlice.token;
-        if (token) {
-            headers.set('Authorization', `Bearer ${token}`);
-        }
-        return headers;
-    },
-});
+import baseQueryWithReauth from "../../shared/baseQueryWithReauth";
 
 export const submissionsApi = createApi({
     reducerPath: 'submissionsApi',
-    baseQuery: baseQueryWithAuth,
-    tagTypes: ['Submissions', 'SubmissionsView'],
+    baseQuery: baseQueryWithReauth,
+    tagTypes: ['Submissions', 'SubmissionsView', 'Activities'],
     endpoints: (builder) => ({
         submissions: builder.query<ISubmission[], void>({
             query: () => API_ROUTES.SUBMISSIONS.LIST,
@@ -38,15 +25,19 @@ export const submissionsApi = createApi({
                 method: 'POST',
                 body,
             }),
-            invalidatesTags: ['SubmissionsView','Submissions'],
+            invalidatesTags: ['SubmissionsView','Submissions', 'Activities'],
         }),
-        createSubmission: builder.mutation({
+        createSubmission: builder.mutation<IResponse, FormData>({
             query: (body: FormData) => ({
                 url: API_ROUTES.SUBMISSIONS.CREATE,
                 method: 'POST',
                 body,
             }),
-            invalidatesTags: ['SubmissionsView','Submissions'],
+            invalidatesTags: ['SubmissionsView','Submissions','Activities'],
+        }),
+        getActivity: builder.query<IResponse, void>({
+            query: () => API_ROUTES.SUBMISSIONS.ACTIVITY,
+            providesTags: ['Activities']
         })
     }),
 });
@@ -57,4 +48,5 @@ export const {
     useSubmissionsViewForQuery,
     useActionSubmissionMutation,
     useCreateSubmissionMutation,
+    useGetActivityQuery
 } = submissionsApi

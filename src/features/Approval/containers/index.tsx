@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import SidebarContainer from '../../Sidebar/containers';
 import ApprovalComponent from '../components/ApprovalComponent';
 import { useActionSubmissionMutation, useSubmissionsViewQuery } from '../api';
 import { IResponse } from '../../../constants/apiDataTypes';
@@ -26,12 +25,11 @@ const ApprovalContainer: React.FC = () => {
 
   // Fetch submissions based on filters or search term
   // const loadSubmissions = useCallback(async () => {
-  //   setLoading(true);
+  //   // setLoading(true);
   //   setError(null);
     
   //   try {
-  //     let data: Submission[];
-      
+            
   //     if (searchTerm) {
   //       data = await searchSubmissions(searchTerm);
   //     } else {
@@ -54,7 +52,7 @@ const ApprovalContainer: React.FC = () => {
   //   }
   // }, [filters, searchTerm]);
 
-  // Initial load
+  // // Initial load
   // useEffect(() => {
   //   loadSubmissions();
   // }, [loadSubmissions]);
@@ -106,24 +104,6 @@ const ApprovalContainer: React.FC = () => {
     }
   };
 
-  // // Handle requesting changes
-  // const handleRequestChanges = async (submissionId: string, comments: string) => {
-  //   try {
-  //     await updateSubmissionStatus(submissionId, 'approved', comments);
-  //     // Update local state
-  //     setSubmissions(prev => 
-  //       prev.map(sub => 
-  //         sub.submissionId === submissionId 
-  //           ? { ...sub, status: 'approved', comments } 
-  //           : sub
-  //       )
-  //     );
-  //   } catch (err) {
-  //     setError('Failed to request changes. Please try again.');
-  //     console.error(err);
-  //   }
-  // };
-
   // Clear error message
   const clearError = () => {
     setError(null);
@@ -136,24 +116,18 @@ const ApprovalContainer: React.FC = () => {
   };
 
   return (
-    <div className="d-flex">
-      <SidebarContainer />
-      <div className="flex-grow-1 d-flex flex-column min-vh-100">
-        <ApprovalComponent 
-          errorMessage={error}
-          clearError={clearError}
-          publishers={publishers}
-          handleFilterChange={handleFilterChange}
-          handleSearch={handleSearch}
-          refreshData={refreshData}
-          loading={isLoadingSubmissions}
-          submissions={submissions}
-          handleApprove={handleApprove}
-          handleReject={handleReject}
-        />
-      </div>
-    </div>
-    
+    <ApprovalComponent 
+      errorMessage={error}
+      clearError={clearError}
+      publishers={publishers}
+      handleFilterChange={handleFilterChange}
+      handleSearch={handleSearch}
+      refreshData={refreshData}
+      loading={isLoadingSubmissions}
+      submissions={submissions}
+      handleApprove={handleApprove}
+      handleReject={handleReject}
+    />
   );
 };
 

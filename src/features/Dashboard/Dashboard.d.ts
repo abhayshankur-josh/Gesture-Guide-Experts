@@ -50,4 +50,6 @@ interface IDashboardStats {
 interface IDashboardComponentProps {
   stats: IDashboardStats;
   isLoading: boolean;
+  recentActivity: ISubmissionView[] | ISubmission[];
+  isRecentLoading: boolean;
 }

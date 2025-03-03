@@ -1,14 +1,15 @@
 
 import React, { useEffect, useState } from 'react';
 import DashboardComponent from '../components/DashboardComponent';
-import SidebarContainer from '../../Sidebar/containers';
 import { FormikHelpers } from 'formik';
-import { Fab } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import SubmissionModal from '../components/SubmissionModal';
-import { useCreateSubmissionMutation } from '../../Approval/api';
+import { useCreateSubmissionMutation, useGetActivityQuery } from '../../Approval/api';
 import { AppRootState } from '../../../store/store';
 import { useAppSelector } from '../../../store/storeHooks';
+import FloatButton from 'antd/es/float-button';
+import { VideoFile } from '@mui/icons-material';
+import { IResponse } from '../../../constants/apiDataTypes';
 
 interface DashboardStats {
   submissions: number;
@@ -37,37 +38,27 @@ const DashboardContainer: React.FC = () => {
     values: IFormValues, 
     { resetForm }: FormikHelpers<IFormValues>
   ): Promise<void> => {
-    setSubmitting(true);
     
-    // TODO: Unable to send file to rails server.
+    setSubmitting(true);
+
     try {
-      // const req = {
-      //   publisherEmail: profile.email,
-      //   videoTitle: values.title,
-      //   videoDescription: values.description,
-      //   thumbnailFile: values.videoThumbnail,
-      //   videoFile: values.videoFile,
-      // };
-      // console.log(req)
-
-
       const formData = new FormData();
       formData.append('publisherEmail', profile.email);
       formData.append('videoTitle', values.title);
       formData.append('videoDescription', values.description);
       if (values.videoThumbnail) {
-        console.log("in th")
+        // console.log("Thumbnail: ",values.videoThumbnail)
         formData.append('thumbnailFile', values.videoThumbnail, values.videoThumbnail.name);
       }
       if (values.videoFile) {
-        console.log("in fi")
-
+        // console.log("VideoFile: ",VideoFile)
         formData.append('videoFile', values.videoFile, values.videoFile.name);
       }
-      console.log(formData)
+      // console.log(formData)
 
-      await createSubmission(formData).unwrap();
-      
+      const response: IResponse = await createSubmission(formData).unwrap();
+      alert(response.message)
+      console.log(response.error || response.message)
       // Reset form and close modal
       resetForm();
       setOpen(false);
@@ -130,36 +121,29 @@ const DashboardContainer: React.FC = () => {
     }, 800);
   };
 
-  const handleCreateNew = () => {
-    alert('Create new document/submission modal would open here');
-    // In a real app, you might open a modal or navigate to a creation page
-  };
-
+  const { data: recentActiviy, isLoading: recentActiviyLoading} = useGetActivityQuery();
   return (
-    <div className="d-flex">
-      <SidebarContainer />
-      <div className="flex-grow-1 d-flex flex-column min-vh-100">
+      <>
         <DashboardComponent
           stats={stats}
           isLoading={isLoading}
-          // onRefresh={handleRefresh}
-          // onCreateNew={handleCreateNew}
+          recentActivity={recentActiviy?.data}
+          isRecentLoading={recentActiviyLoading}
         />
-        <Fab
-          color="primary"
-          aria-label="upload"
-          sx={{ position: 'fixed', bottom: 20, right: 20 }}
+
+        <FloatButton 
+          icon={<PlusCircleOutlined />} 
+          type="primary" 
+          tooltip={<div>Add Submission</div>}
+          style={{ insetInlineEnd: 50 }} 
           onClick={handleOpenModal}
-        >
-          <AddIcon />
-        </Fab>
+        />
         <SubmissionModal 
           isOpen={isOpen}
           submitting={submitting}
           handleClose={handleCloseModal} 
           handleSubmit={handleSubmitModal} />
-      </div>
-    </div>
+      </>
   );
 };
 
