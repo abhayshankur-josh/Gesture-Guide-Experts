@@ -25,6 +25,7 @@ export default function SignupContainer() {
                 navigate(ROUTES.DASHBOARD);
             } else {
                 console.log(`Message: ${message}, Error: ${error}`);
+                alert(error)
             }
         } catch (error) {
             console.error('Signup failed:', error);

@@ -24,7 +24,7 @@ const ProfileModal: React.FC<IProfileModalProps> = ({ show, onHide }) => {
               
               <Card>
                 <Card.Body>
-                  <Card.Title className="mb-3">{profile.full_name}</Card.Title>
+                  <Card.Title className="mb-3">{profile.username}</Card.Title>
                   
                   <Card.Subtitle className="mb-2 text-muted">
                     <i className="bi bi-envelope me-2"></i>
@@ -33,7 +33,7 @@ const ProfileModal: React.FC<IProfileModalProps> = ({ show, onHide }) => {
                   
                   <Card.Text className="mt-3">
                     <span className="fw-bold">Role: </span>
-                    {profile.role_id}
+                    {profile.role}
                   </Card.Text>
                 </Card.Body>
               </Card>

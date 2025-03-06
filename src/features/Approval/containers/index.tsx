@@ -81,6 +81,7 @@ const ApprovalContainer: React.FC = () => {
         rejectionReason: rejectionReason
       }
       const response: IResponse = await action(requestBody).unwrap()
+      response.message && alert(response.message)
       console.log(response.message || response.error)
     }
   }

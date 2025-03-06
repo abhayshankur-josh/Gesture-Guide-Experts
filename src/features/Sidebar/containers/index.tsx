@@ -53,7 +53,7 @@ const SidebarContainer: React.FC = () => {
   };
 
   
-  const username = useAppSelector((state: AppRootState) => state.profileSlice.full_name)
+  const username = useAppSelector((state: AppRootState) => state.profileSlice.username)
 
 
   // Modal visibility state

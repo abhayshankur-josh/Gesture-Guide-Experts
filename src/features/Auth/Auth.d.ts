@@ -10,12 +10,6 @@ interface IAuthLoginRequest {
     password: string;
 }
 
-interface IAuthResponse {
-    token: string;
-    error?: string;
-    message?: string;
-}
- 
 interface IAuthState {
     token: string | null;
 }

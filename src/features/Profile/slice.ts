@@ -13,13 +13,17 @@ const storedProfile = getFromLocalStorage();
 
 const initialState: IProfile = {
     id: (storedProfile && storedProfile.id) || 0,
+    username: (storedProfile && storedProfile.username) || "",
     email: (storedProfile && storedProfile.email) || "",
-    full_name: (storedProfile && storedProfile.full_name) || "",
-    role_id: (storedProfile && storedProfile.role_id) || 0,
-    jti: (storedProfile && storedProfile.jti) || "",
-    active: (storedProfile && storedProfile.active) || false,
-    created_at: (storedProfile && storedProfile.created_at) || "",
-    updated_at: (storedProfile && storedProfile.updated_at) || ""
+    role: (storedProfile && storedProfile.role) || "",
+    // id: (storedProfile && storedProfile.id) || 0,
+    // email: (storedProfile && storedProfile.email) || "",
+    // full_name: (storedProfile && storedProfile.full_name) || "",
+    // role_id: (storedProfile && storedProfile.role_id) || 0,
+    // jti: (storedProfile && storedProfile.jti) || "",
+    // active: (storedProfile && storedProfile.active) || false,
+    // created_at: (storedProfile && storedProfile.created_at) || "",
+    // updated_at: (storedProfile && storedProfile.updated_at) || ""
 };
 
 const profileSlice = createSlice({

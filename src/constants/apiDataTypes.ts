@@ -5,6 +5,7 @@
 //     payload?: any;
 // }
 export interface IResponse {
+    token?: string
     data?: any
     message?: string;
     error?: string;

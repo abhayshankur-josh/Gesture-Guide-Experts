@@ -32,14 +32,14 @@ export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({ baseUrl: API_ROUTES.BASE_URL+API_ROUTES.VERSIONS.V1 }),
     endpoints: (builder) => ({
-        login: builder.mutation<IAuthResponse, IAuthLoginRequest>({
+        login: builder.mutation<IResponse, IAuthLoginRequest>({
             query: (body) => ({
                 url: API_ROUTES.AUTH.LOGIN,
                 method: 'POST',
                 body,
             }),
         }),
-        signup: builder.mutation<IAuthResponse, IAuthSignupRequest>({
+        signup: builder.mutation<IResponse, IAuthSignupRequest>({
             query: (body) => ({
                 url: API_ROUTES.AUTH.SIGNUP,
                 method: 'POST',
